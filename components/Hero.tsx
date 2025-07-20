@@ -65,7 +65,7 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         <video 
             ref={videoRef}
-            src="assets/videos/Hero_bg.mp4" 
+            src="/assets/videos/Hero_bg.mp4" 
             autoPlay 
             loop 
             muted 
