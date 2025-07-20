@@ -83,30 +83,41 @@ const Hero: React.FC = () => {
             muted 
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ 
+              objectPosition: 'center center',
+              minWidth: '100%',
+              minHeight: '100%'
+            }}
             onLoadStart={() => console.log('Video loading started')}
             onError={(e) => console.error('Video error:', e)}
             onCanPlay={() => console.log('Video can play')}
         >
-            {/* Mobile optimized version - smaller file size */}
+            {/* Mobile portrait optimized - wider to fill screen */}
             <source 
-              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_768,h_1024,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_480,h_854,c_fill,g_center,q_auto:good/Hero_bg_pgljsg.mp4" 
               type="video/mp4" 
-              media="(max-width: 768px)" 
+              media="(max-width: 768px) and (orientation: portrait)" 
+            />
+            {/* Mobile landscape */}
+            <source 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_854,h_480,c_fill,g_center,q_auto:good/Hero_bg_pgljsg.mp4" 
+              type="video/mp4" 
+              media="(max-width: 768px) and (orientation: landscape)" 
             />
             {/* Tablet version */}
             <source 
-              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1024,h_768,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1024,h_768,c_fill,g_center,q_auto:good/Hero_bg_pgljsg.mp4" 
               type="video/mp4" 
               media="(max-width: 1024px)" 
             />
             {/* Desktop version - full quality */}
             <source 
-              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1920,h_1080,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1920,h_1080,c_fill,g_center,q_auto:good/Hero_bg_pgljsg.mp4" 
               type="video/mp4" 
             />
             {/* WebM format for better compression */}
             <source 
-              src="https://res.cloudinary.com/dkpp29hrv/video/upload/f_webm,w_1920,h_1080,c_fill,q_auto:good/Hero_bg_pgljsg.webm" 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/f_webm,w_1920,h_1080,c_fill,g_center,q_auto:good/Hero_bg_pgljsg.webm" 
               type="video/webm" 
             />
         </video>
