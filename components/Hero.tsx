@@ -69,6 +69,14 @@ const Hero: React.FC = () => {
         style={{ y: y1 }}
       >
         <div className="absolute inset-0 bg-black/70 z-10"></div>
+        {/* Fallback background image */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          style={{ 
+            backgroundImage: 'url(https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80)',
+            backgroundColor: '#1a1a1a' 
+          }}
+        ></div>
         <video 
             ref={videoRef}
             autoPlay 
@@ -76,10 +84,11 @@ const Hero: React.FC = () => {
             muted 
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ backgroundColor: '#1a1a1a' }}
+            onLoadStart={() => console.log('Video loading started')}
+            onError={(e) => console.error('Video error:', e)}
+            onCanPlay={() => console.log('Video can play')}
         >
             <source src="/assets/videos/Hero_bg.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
         </video>
       </motion.div>
 
