@@ -15,7 +15,13 @@ const Hero: React.FC = () => {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
+      const video = videoRef.current;
+      
+      video.addEventListener('loadstart', () => console.log('Video loading started'));
+      video.addEventListener('error', (e) => console.error('Video error:', e));
+      video.addEventListener('canplay', () => console.log('Video can play'));
+      
+      video.play().catch(error => {
         console.error("Video autoplay was prevented:", error);
       });
     }
@@ -65,13 +71,16 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         <video 
             ref={videoRef}
-            src="/assets/videos/Hero_bg.mp4" 
             autoPlay 
             loop 
             muted 
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
-        />
+            style={{ backgroundColor: '#1a1a1a' }}
+        >
+            <source src="/assets/videos/Hero_bg.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
       </motion.div>
 
       {/* Mid Layer - Animated Shapes */}
