@@ -12,40 +12,19 @@ const Hero: React.FC = () => {
   const [isOrderHovered, setIsOrderHovered] = useState(false);
   const [isFood1Hovered, setIsFood1Hovered] = useState(false);
   const [isFood2Hovered, setIsFood2Hovered] = useState(false);
-  const [shouldPlayVideo, setShouldPlayVideo] = useState(true);
-
   useEffect(() => {
-    // Check for slow connection or mobile data saver
-    const connection = (navigator as any).connection;
-    if (connection) {
-      if (connection.effectiveType === '2g' || connection.saveData) {
-        setShouldPlayVideo(false);
-        return;
-      }
-    }
-
-    // Check for reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setShouldPlayVideo(false);
-      return;
-    }
-
-    if (videoRef.current && shouldPlayVideo) {
+    if (videoRef.current) {
       const video = videoRef.current;
       
       video.addEventListener('loadstart', () => console.log('Video loading started'));
-      video.addEventListener('error', (e) => {
-        console.error('Video error:', e);
-        setShouldPlayVideo(false);
-      });
+      video.addEventListener('error', (e) => console.error('Video error:', e));
       video.addEventListener('canplay', () => console.log('Video can play'));
       
       video.play().catch(error => {
         console.error("Video autoplay was prevented:", error);
-        setShouldPlayVideo(false);
       });
     }
-  }, [shouldPlayVideo]);
+  }, []);
 
   const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const y2 = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
@@ -97,42 +76,40 @@ const Hero: React.FC = () => {
             backgroundColor: '#1a1a1a' 
           }}
         ></div>
-        {shouldPlayVideo && (
-          <video 
-              ref={videoRef}
-              autoPlay 
-              loop 
-              muted 
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-              onLoadStart={() => console.log('Video loading started')}
-              onError={(e) => console.error('Video error:', e)}
-              onCanPlay={() => console.log('Video can play')}
-          >
-              {/* Mobile optimized version - smaller file size */}
-              <source 
-                src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_768,h_1024,c_fill,q_auto:low/Hero_bg_pgljsg.mp4" 
-                type="video/mp4" 
-                media="(max-width: 768px)" 
-              />
-              {/* Tablet version */}
-              <source 
-                src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1024,h_768,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
-                type="video/mp4" 
-                media="(max-width: 1024px)" 
-              />
-              {/* Desktop version - full quality */}
-              <source 
-                src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1920,h_1080,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
-                type="video/mp4" 
-              />
-              {/* WebM format for better compression */}
-              <source 
-                src="https://res.cloudinary.com/dkpp29hrv/video/upload/f_webm,w_1920,h_1080,c_fill,q_auto:good/Hero_bg_pgljsg.webm" 
-                type="video/webm" 
-              />
-          </video>
-        )}
+        <video 
+            ref={videoRef}
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            onLoadStart={() => console.log('Video loading started')}
+            onError={(e) => console.error('Video error:', e)}
+            onCanPlay={() => console.log('Video can play')}
+        >
+            {/* Mobile optimized version - smaller file size */}
+            <source 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_768,h_1024,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
+              type="video/mp4" 
+              media="(max-width: 768px)" 
+            />
+            {/* Tablet version */}
+            <source 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1024,h_768,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
+              type="video/mp4" 
+              media="(max-width: 1024px)" 
+            />
+            {/* Desktop version - full quality */}
+            <source 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/w_1920,h_1080,c_fill,q_auto:good/Hero_bg_pgljsg.mp4" 
+              type="video/mp4" 
+            />
+            {/* WebM format for better compression */}
+            <source 
+              src="https://res.cloudinary.com/dkpp29hrv/video/upload/f_webm,w_1920,h_1080,c_fill,q_auto:good/Hero_bg_pgljsg.webm" 
+              type="video/webm" 
+            />
+        </video>
       </motion.div>
 
       {/* Mid Layer - Animated Shapes */}
