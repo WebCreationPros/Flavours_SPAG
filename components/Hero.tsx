@@ -88,7 +88,7 @@ const Hero: React.FC = () => {
             onError={(e) => console.error('Video error:', e)}
             onCanPlay={() => console.log('Video can play')}
         >
-            <source src="/assets/videos/Hero_bg.mp4" type="video/mp4" />
+            <source src="https://res.cloudinary.com/dkpp29hrv/video/upload/v1752979876/Hero_bg_pgljsg.mp4" type="video/mp4" />
         </video>
       </motion.div>
 
