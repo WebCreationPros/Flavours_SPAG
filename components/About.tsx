@@ -60,9 +60,12 @@ const About: React.FC = () => {
                 </AnimatePresence>
                 <div className="absolute inset-[2px] bg-brand-dark rounded-lg"></div>
             </div>
-            <div className="relative z-10 w-full h-full bg-cover bg-center bg-gray-600 flex items-center justify-center">
-                <p className="text-white/50 text-center">Placeholder:<br/>Welcoming staff photo</p>
-            </div>
+            <div 
+                className="relative z-10 w-full h-full bg-cover bg-center"
+                style={{
+                    backgroundImage: 'url(https://res.cloudinary.com/dkpp29hrv/image/upload/v1752979853/cld-sample-4.jpg)'
+                }}
+            ></div>
         </motion.div>
         <motion.div variants={itemVariantsRight}>
         <h2 className="font-heading text-5xl md:text-6xl text-brand-yellow tracking-wide">
