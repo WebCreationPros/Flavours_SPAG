@@ -1,9 +1,38 @@
 
-import React, { useState } from 'react';
-import { motion, Variants, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, Variants, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const About: React.FC = () => {
   const [isImageHovered, setIsImageHovered] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+  
+  // Mouse position tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  // Smooth spring animations
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), { stiffness: 300, damping: 30 });
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageRef.current) return;
+    
+    const rect = imageRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const x = (e.clientX - centerX) / (rect.width / 2);
+    const y = (e.clientY - centerY) / (rect.height / 2);
+    
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+  
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setIsImageHovered(false);
+  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -35,7 +64,7 @@ const About: React.FC = () => {
   };
 
   return (
-    <div className="py-24 sm:py-32 bg-brand-dark">
+    <div className="py-24 sm:py-32 bg-brand-dark" style={{ perspective: '1000px' }}>
       <motion.div
         className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-center"
         variants={containerVariants}
@@ -44,22 +73,91 @@ const About: React.FC = () => {
         viewport={{ once: true, amount: 0.5 }}
       >
         <motion.div 
+          ref={imageRef}
           variants={itemVariantsLeft} 
-          className="relative w-full h-80 md:h-[500px] rounded-lg shadow-2xl overflow-hidden"
+          className="relative w-full h-80 md:h-[500px] rounded-lg shadow-2xl overflow-hidden perspective-1000"
+          style={{
+            rotateX,
+            rotateY,
+            transformStyle: "preserve-3d",
+          }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
           onHoverStart={() => setIsImageHovered(true)}
-          onHoverEnd={() => setIsImageHovered(false)}
+          whileHover={{ 
+            scale: 1.02,
+            boxShadow: "0 25px 50px -12px rgba(254, 209, 0, 0.5)",
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-            <div className="absolute inset-0">
+            {/* Glow effect background */}
+            <div className="absolute inset-0 opacity-70">
                 <AnimatePresence>
                     {isImageHovered && (
                         <>
-                            <motion.div style={{ background: 'linear-gradient(135deg, var(--tw-color-brand-green) 0%, transparent 50%)' }} initial={{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' }} animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }} exit={{ clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)' }} transition={{ duration: 0.5, ease: 'easeInOut' }} className="absolute inset-0" />
-                            <motion.div style={{ background: 'linear-gradient(315deg, var(--tw-color-brand-yellow) 0%, transparent 50%)' }} initial={{ clipPath: 'polygon(100% 100%, 100% 100%, 0 100%, 0 100%)' }} animate={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%, 0 0)' }} exit={{ clipPath: 'polygon(0 100%, 0 100%, 0 0, 0 0)' }} transition={{ duration: 0.5, ease: 'easeInOut' }} className="absolute inset-0" />
+                            {/* Green glow from top-center traveling left */}
+                            <motion.div 
+                                className="absolute inset-0"
+                                style={{ 
+                                    background: 'linear-gradient(225deg, rgba(0, 155, 119, 0.8) 0%, rgba(0, 155, 119, 0.4) 25%, transparent 50%)',
+                                    filter: 'blur(8px)'
+                                }}
+                                initial={{ 
+                                    clipPath: 'polygon(50% 0%, 50% 0%, 50% 0%, 50% 0%)'
+                                }}
+                                animate={{ 
+                                    clipPath: 'polygon(50% 0%, 0% 50%, 0% 100%, 50% 100%)'
+                                }}
+                                exit={{ 
+                                    clipPath: 'polygon(50% 0%, 50% 0%, 50% 0%, 50% 0%)'
+                                }}
+                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                            />
+                            {/* Yellow glow from top-center traveling right */}
+                            <motion.div 
+                                className="absolute inset-0"
+                                style={{ 
+                                    background: 'linear-gradient(315deg, rgba(254, 209, 0, 0.8) 0%, rgba(254, 209, 0, 0.4) 25%, transparent 50%)',
+                                    filter: 'blur(8px)'
+                                }}
+                                initial={{ 
+                                    clipPath: 'polygon(50% 0%, 50% 0%, 50% 0%, 50% 0%)'
+                                }}
+                                animate={{ 
+                                    clipPath: 'polygon(50% 0%, 100% 50%, 100% 100%, 50% 100%)'
+                                }}
+                                exit={{ 
+                                    clipPath: 'polygon(50% 0%, 50% 0%, 50% 0%, 50% 0%)'
+                                }}
+                                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+                            />
+                            {/* Central meeting glow at bottom */}
+                            <motion.div 
+                                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-16"
+                                style={{ 
+                                    background: 'radial-gradient(ellipse, rgba(255, 215, 0, 0.6) 0%, rgba(0, 155, 119, 0.4) 40%, transparent 70%)',
+                                    filter: 'blur(12px)'
+                                }}
+                                initial={{ 
+                                    scale: 0,
+                                    opacity: 0
+                                }}
+                                animate={{ 
+                                    scale: 1.5,
+                                    opacity: 1
+                                }}
+                                exit={{ 
+                                    scale: 0,
+                                    opacity: 0
+                                }}
+                                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
+                            />
                         </>
                     )}
                 </AnimatePresence>
-                <div className="absolute inset-[2px] bg-brand-dark rounded-lg"></div>
             </div>
+            {/* Image border */}
+            <div className="absolute inset-[2px] bg-brand-dark rounded-lg"></div>
             <div 
                 className="relative z-10 w-full h-full bg-cover bg-center"
                 style={{
