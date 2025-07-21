@@ -3,8 +3,8 @@ import { NavLink, MenuItem } from './types';
 
 export const NAV_LINKS: NavLink[] = [
   { name: 'Home', href: '#home' },
-  { name: 'Menu', href: '#menu' },
   { name: 'About', href: '#about' },
+  { name: 'Menu', href: '#menu' },
   { name: 'Contact', href: '#contact' },
 ];
 
